@@ -46,5 +46,58 @@ router.post(
     }
   }
 );
+router.put("/updatenotes/:id", fetchuser, async (req, res) => {
+  const { title, description, tag } = req.body;
+  try {
+    const newNote = {};
+    if (title) {
+      newNote.title = title;
+    }
+    if (description) {
+      newNote.description = description;
+    }
+    if (tag) {
+      newNote.tag = tag;
+    }
 
+    let note = await Notes.findById(req.params.id);
+    if (!note) {
+      return res.status(400).send("error occured");
+    }
+
+    if (note.user !== req.user.id.parseInt) {
+      return res.status(401).json("user not allowed");
+    }
+
+    note = await Notes.findByIdAndUpdate(
+      req.params.id,
+      { $set: newNote },
+      { new: true }
+    );
+    res.json(note);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("error occured");
+  }
+});
+
+router.delete("/deletenotes/:id", fetchuser, async (req, res) => {
+  const { title, description, tag } = req.body;
+  try {
+    let note = await Notes.findById(req.params.id);
+    if (!note) {
+      return res.status(400).send("error occured");
+    }
+
+    if (note.user !== req.user.id.parseInt) {
+      return res.status(401).json("user not allowed");
+    }
+
+    note = await Notes.findByIdAndDelete(req.params.id);
+    res.json({ success: "note delete", note: note });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send("error occured");
+  }
+});
 module.exports = router;
