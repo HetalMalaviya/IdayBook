@@ -8,6 +8,8 @@ const Noteitem = (props) => {
         <div className="px-6 py-4 my-3">
           <div className="font-bold text-xl mb-2">{note.title}</div>
           <p className="text-gray-700 text-base">{note.description}</p>
+          <i className="fa-solid fa-trash mx-3 mt-8"></i>
+          <i className="fa-solid fa-pen-to-square"></i>
         </div>
       </div>
     </div>
